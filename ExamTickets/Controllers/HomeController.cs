@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace ExamTickets.Controllers;
 
 public class HomeController : Controller
