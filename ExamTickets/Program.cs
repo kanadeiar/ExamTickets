@@ -30,5 +30,6 @@ app.UseStatusCodePagesWithRedirects("~/home/error/{0}");
 app.MapDefaultControllerRoute();
 app.MapRazorPages();
 app.MapBlazorHub();
+app.MapFallbackToPage("online/{param?}", "/Shared/_Host");
 
 app.Run();
