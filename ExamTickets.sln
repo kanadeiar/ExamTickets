@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamTickets", "ExamTickets\ExamTickets.csproj", "{2FD88F0E-85B1-4852-A615-C9E65E13D47E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamTickets.Dal", "ExamTickets.Dal\ExamTickets.Dal.csproj", "{D9F4B479-67F9-4441-AA30-6841FE491ABD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamTickets.Domain", "ExamTickets.Domain\ExamTickets.Domain.csproj", "{F07817F2-A585-451A-9ECC-499D851706D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{2FD88F0E-85B1-4852-A615-C9E65E13D47E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FD88F0E-85B1-4852-A615-C9E65E13D47E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FD88F0E-85B1-4852-A615-C9E65E13D47E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9F4B479-67F9-4441-AA30-6841FE491ABD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9F4B479-67F9-4441-AA30-6841FE491ABD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9F4B479-67F9-4441-AA30-6841FE491ABD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9F4B479-67F9-4441-AA30-6841FE491ABD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F07817F2-A585-451A-9ECC-499D851706D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F07817F2-A585-451A-9ECC-499D851706D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F07817F2-A585-451A-9ECC-499D851706D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F07817F2-A585-451A-9ECC-499D851706D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
