@@ -6,7 +6,7 @@ public static class TestData
     {
         public static string Username = "admin";
         public static string Email = "admin@example.com";
-        public static string Password = "password";
+        public static string Password = "secret";
         public static string Rolename = "admins";
     }
     public static class User

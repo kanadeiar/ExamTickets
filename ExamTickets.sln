@@ -5,9 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamTickets", "ExamTickets\ExamTickets.csproj", "{2FD88F0E-85B1-4852-A615-C9E65E13D47E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamTickets.Dal", "ExamTickets.Dal\ExamTickets.Dal.csproj", "{D9F4B479-67F9-4441-AA30-6841FE491ABD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamTickets.Dal", "ExamTickets.Dal\ExamTickets.Dal.csproj", "{D9F4B479-67F9-4441-AA30-6841FE491ABD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamTickets.Domain", "ExamTickets.Domain\ExamTickets.Domain.csproj", "{F07817F2-A585-451A-9ECC-499D851706D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamTickets.Domain", "ExamTickets.Domain\ExamTickets.Domain.csproj", "{F07817F2-A585-451A-9ECC-499D851706D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
