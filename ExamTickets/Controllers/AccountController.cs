@@ -91,7 +91,18 @@ public class AccountController : Controller
         await _SignInManager.SignOutAsync();
         return LocalRedirect(returnUrl ?? "/");
     }
-  
+
+    #region WebAPI
+
+    [AllowAnonymous]
+    public async Task<IActionResult> IsNameFree(string UserName)
+    {
+        var user = await _UserManager.FindByNameAsync(UserName);
+        return Json(user is null ? "true" : "Пользователь с таким имененем уже существует");
+    }
+
+    #endregion
+
     [AllowAnonymous]
     public IActionResult AccessDenied()
     {
@@ -138,6 +149,7 @@ public class AccountController : Controller
 
         [Required(ErrorMessage = "Нужно обязательно ввести логин пользователя")]
         [Display(Name = "Логин пользователя")]
+        [Remote("IsNameFree", "Account")]
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "Нужно обязательно придумать и ввести какой-либо пароль")]
