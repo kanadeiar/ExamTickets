@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace ExamTickets.Controllers;
+﻿namespace ExamTickets.Controllers;
 
 [Authorize]
 public class AccountController : Controller
