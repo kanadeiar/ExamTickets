@@ -1,0 +1,54 @@
+﻿@model IEnumerable<ExamTickets.Controllers.PreparationController.QuestionWebModel>
+@{
+    ViewBag.Title = "Билет";
+}
+
+<div class="row">
+    <div class="col-sm-3">
+        <partial name="Partial/_LeftSidebarPartial" />
+    </div>
+    <div class="col-sm-9">
+        <h1>@ViewBag.Title</h1>
+        
+        <div class="border-1 shadow rounded bg-light p-1">
+            
+            <h5>@ViewBag.TicketText</h5>
+
+            <p class="m-0">
+                Экзамен: <a asp-controller="Preparation" asp-action="Examen" asp-route-id="@ViewBag.ExamenId" class="btn btn-outline-info text-black">@ViewBag.ExamenName</a>
+            </p>
+
+            <p>Подготовка к сдаче экзаменов.</p>
+            
+            <p>Экзаменационные вопросы:</p>
+            @{ var index = 1; }
+            @foreach (var e in Model)
+            {
+                <div class="mb-1 card">
+                    <div class="card-body">
+                        <h5 class="card-title">@(index++) @e.QuestionText</h5>
+                        @{ var opt = 1; }
+                        @foreach (var o in e.QuestionOptions)
+                        {
+                            @if (o.IsCorrect)
+                            {
+                                <div class="text-success">
+                                    <strong>@(opt++) @o.OptionText - Правильный вариант ответа</strong>
+                                </div>
+                            }
+                            else
+                            {
+                                <div>
+                                    @(opt++) @o.OptionText
+                                </div>
+                            }
+                        }
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+</div>

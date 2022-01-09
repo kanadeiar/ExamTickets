@@ -79,11 +79,11 @@ public class AccountController : Controller
         {
             return LocalRedirect(model.ReturnUrl ?? "/");
         }
-        ModelState.AddModelError("", "Ошибка в имени пользователя, либо в пароле при входе в систему");
+        ModelState.AddModelError("", "Неверный логин пользователя или пароль");
         return View();
     }
 
-    public async Task<IActionResult> Logout(string returnUrl)
+    public async Task<IActionResult> Logout(string? returnUrl)
     {
         var username = User.Identity!.Name;
         await _SignInManager.SignOutAsync();
@@ -96,7 +96,7 @@ public class AccountController : Controller
     public async Task<IActionResult> IsNameFree(string UserName)
     {
         var user = await _UserManager.FindByNameAsync(UserName);
-        return Json(user is null ? "true" : "Пользователь с таким имененем уже существует");
+        return Json(user is null ? "true" : "Пользователь с таким логином уже существует");
     }
 
     #endregion
@@ -178,7 +178,7 @@ public class AccountController : Controller
         public bool RememberMe { get; set; }
 
         [HiddenInput(DisplayValue = false)]
-        public string ReturnUrl { get; set; }
+        public string? ReturnUrl { get; set; }
     }
 }
 

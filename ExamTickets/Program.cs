@@ -2,7 +2,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureServices(services =>
 {
-    services.AddDbContext<IdentityContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
+    services.AddDbContext<IdentityContext>(options => 
+        options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
+    services.AddDbContext<ExamTicketsContext>(options =>
+        options.UseSqlite(builder.Configuration.GetConnectionString("ExamTicketsConnection")));
     services.AddIdentity<User, Role>().AddEntityFrameworkStores<IdentityContext>();
     services.Configure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, options =>
     {
@@ -28,7 +31,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 var app = builder.Build();
 
-IdentitySeedTestData.SeedTestData(app.Services, builder.Configuration);
+IdentitySeedTestData.SeedTestData(app.Services, builder.Configuration, app.Logger);
+ExamTicketsSeedTestData.SeedTestData(app.Services, builder.Configuration, app.Logger);
 
 if (app.Environment.IsDevelopment())
 {

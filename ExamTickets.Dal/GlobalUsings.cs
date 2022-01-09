@@ -1,4 +1,4 @@
-﻿// dotnet ef --startup-project ../ExamTickets/ migrations add init --context 
+﻿// dotnet ef --startup-project ../ExamTickets/ migrations add initTickets --context ExamTicketsContext
 // dotnet ef --startup-project ../ExamTickets/ migrations add init --context IdentityContext
 
 global using System;

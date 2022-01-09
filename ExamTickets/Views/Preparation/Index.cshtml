@@ -1,0 +1,31 @@
+﻿@model IEnumerable<ExamTickets.Controllers.PreparationController.GroupWebModel>
+@{
+    ViewBag.Title = "Подготовка к сдаче экзаменов";
+}
+
+<div class="row">
+    <div class="col-sm-3">
+        <partial name="Partial/_LeftSidebarPartial" />
+    </div>
+    <div class="col-sm-9">
+        <h1>@ViewBag.Title</h1>
+        
+        <div class="border-1 shadow rounded bg-light p-1">
+
+            <p>Подготовка к сдаче экзаменов.</p>
+            
+            <p class="m-0">Выберите группу экзаменов:</p>
+            
+            @foreach (var e in Model.OrderBy(m => m.Order))
+            {
+                <div class="mb-1">
+                    <a asp-controller="Preparation" asp-action="Group" asp-route-id="@e.Id" class="btn btn-success">
+                        @e.Name
+                    </a>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</div>
