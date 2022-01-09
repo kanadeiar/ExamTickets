@@ -1,0 +1,46 @@
+﻿@page "/online/group/{grid:int}/examen/{id:int}"
+@inherits OwningComponentBase<ExamTicketsContext>
+
+<PageTitle>Билеты - Экзаменация</PageTitle>
+
+<h1 class="my-2 p-2 bg-dark text-white">Экзаменационные Билеты.</h1>
+
+<div class="border-1 shadow rounded bg-light p-2 mb-4">
+    <p>Экзамен: <strong>@ExamenName</strong></p>
+
+    <p>Выберите билет:</p>
+
+    @if (Tickets is null)
+    {
+        <div class="p-4 text-center">Загрузка ...</div>
+    }
+    else if (!Tickets.Any())
+    {
+        <div class="p-4 text-center">Данные отсутствуют</div>
+    }
+    else
+    {
+        @foreach (var e in Tickets)
+        {
+            <NavLink class="btn btn-success me-1" href="@($"online/group/{GrId}/ticket/{e.Id}")">
+                @e.TicketText
+            </NavLink>
+        }
+    }
+</div>
+
+@code {
+    ExamTicketsContext _Context => Service;
+    [Parameter]
+    public int GrId { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+    public IEnumerable<Domain.Entities.Ticket>? Tickets { get; set; }
+    public string ExamenName { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ExamenName = _Context.Examens.First(g => g.Id == Id).Name;
+        Tickets = await _Context.Tickets.Where(t => t.ExamenId == Id).ToArrayAsync();
+    }
+}

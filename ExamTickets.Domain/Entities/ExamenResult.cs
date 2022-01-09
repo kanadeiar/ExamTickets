@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Text;
 using ExamTickets.Domain.Entities.Base;
 
@@ -23,14 +24,18 @@ namespace ExamTickets.Domain.Entities
         [Display(Name = "Название экзамена")]
         public string ExamenName { get; set; }
         [Display(Name = "Название билета")]
-        public string TicketName { get; set; }
+        public string TicketText { get; set; }
 
         [Display(Name = "Количетсво верных ответов")]
         public int ValidCount { get; set; }
+
         [Display(Name = "Количетсво ошибочных ответов")]
         public int ErrorCount { get; set; }
-        [Display(Name = "Количество ответов")]
+        [Display(Name = "Количество ответов")] 
         public int Count { get; set; }
+
+        [Display(Name = "Результаты")]
+        public IEnumerable<ResultQuestion> ResultQuestions { get; set; } = new List<ResultQuestion>();
 
         [Display(Name = "Количество прошедшего времени с начала экзамена")]
         public TimeSpan SpanRunningExam { get; set; }
@@ -38,6 +43,7 @@ namespace ExamTickets.Domain.Entities
         public int CountMinutesToExam { get; set; }
 
         /// <summary> Статус результата экзамена </summary>
+        [NotMapped]
         public TypeStatusExam GetStatusExam
         {
             get

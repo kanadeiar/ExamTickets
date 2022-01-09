@@ -21,12 +21,5 @@ namespace ExamTickets.Domain.Entities
         /// <summary> Вопрос </summary>
         [ForeignKey(nameof(QuestionId))]
         public Question Question { get; set; }
-
-        #region Действия пользователя
-
-        /// <summary> Отмечен пользователем как ответ </summary>
-        public bool IsUserChecked { get; set; }
-
-        #endregion
     }
 }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExamTickets.Dal.Migrations.ExamTickets
 {
     [DbContext(typeof(ExamTicketsContext))]
-    [Migration("20220109024833_initTickets")]
+    [Migration("20220109143609_initTickets")]
     partial class initTickets
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -91,7 +91,7 @@ namespace ExamTickets.Dal.Migrations.ExamTickets
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TicketName")
+                    b.Property<string>("TicketText")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -138,9 +138,6 @@ namespace ExamTickets.Dal.Migrations.ExamTickets
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("Done")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("QuestionText")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -170,9 +167,6 @@ namespace ExamTickets.Dal.Migrations.ExamTickets
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsUserChecked")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("OptionText")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -191,6 +185,65 @@ namespace ExamTickets.Dal.Migrations.ExamTickets
                     b.HasIndex("QuestionId");
 
                     b.ToTable("QuestionOptions");
+                });
+
+            modelBuilder.Entity("ExamTickets.Domain.Entities.ResultQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Correct")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ExamenResultId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("QuestionText")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Selected")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExamenResultId");
+
+                    b.ToTable("ResultQuestions");
+                });
+
+            modelBuilder.Entity("ExamTickets.Domain.Entities.ResultQuestionOption", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("OptionText")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ResultQuestionId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ResultQuestionId");
+
+                    b.ToTable("ResultQuestionOptions");
                 });
 
             modelBuilder.Entity("ExamTickets.Domain.Entities.Ticket", b =>
@@ -252,6 +305,28 @@ namespace ExamTickets.Dal.Migrations.ExamTickets
                     b.Navigation("Question");
                 });
 
+            modelBuilder.Entity("ExamTickets.Domain.Entities.ResultQuestion", b =>
+                {
+                    b.HasOne("ExamTickets.Domain.Entities.ExamenResult", "ExamenResult")
+                        .WithMany("ResultQuestions")
+                        .HasForeignKey("ExamenResultId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ExamenResult");
+                });
+
+            modelBuilder.Entity("ExamTickets.Domain.Entities.ResultQuestionOption", b =>
+                {
+                    b.HasOne("ExamTickets.Domain.Entities.ResultQuestion", "ResultQuestion")
+                        .WithMany("QuestionOptions")
+                        .HasForeignKey("ResultQuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ResultQuestion");
+                });
+
             modelBuilder.Entity("ExamTickets.Domain.Entities.Ticket", b =>
                 {
                     b.HasOne("ExamTickets.Domain.Entities.Examen", "Examen")
@@ -268,12 +343,22 @@ namespace ExamTickets.Dal.Migrations.ExamTickets
                     b.Navigation("Tickets");
                 });
 
+            modelBuilder.Entity("ExamTickets.Domain.Entities.ExamenResult", b =>
+                {
+                    b.Navigation("ResultQuestions");
+                });
+
             modelBuilder.Entity("ExamTickets.Domain.Entities.Group", b =>
                 {
                     b.Navigation("Examens");
                 });
 
             modelBuilder.Entity("ExamTickets.Domain.Entities.Question", b =>
+                {
+                    b.Navigation("QuestionOptions");
+                });
+
+            modelBuilder.Entity("ExamTickets.Domain.Entities.ResultQuestion", b =>
                 {
                     b.Navigation("QuestionOptions");
                 });

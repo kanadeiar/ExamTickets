@@ -1,11 +1,42 @@
 ﻿@page "/online"
+@inherits OwningComponentBase<ExamTicketsContext>
 
-<PageTitle>Главная</PageTitle>
+<PageTitle>Группы экзаменов - Экзаменация</PageTitle>
 
-<h1 class="my-2 p-2 bg-dark text-white">Экзаменационные билеты.</h1>
+<h1 class="my-2 p-2 bg-dark text-white"><span class="fa fa-home" aria-hidden="true"></span> Экзаменация.</h1>
 
-<p>Сдача экзамена.</p>
+<div class="border-1 shadow rounded bg-light p-2 mb-4">
+    <p>Выберите группу экзаменов:</p>
 
+    @if (Groups is null)
+    {
+        <div class="p-4 text-center">Загрузка ...</div>
+    }
+    else if (!Groups.Any())
+    {
+        <div class="p-4 text-center">Данные отсутствуют</div>
+    }
+    else
+    {
+        @foreach (var e in Groups)
+        {
+            <div class="mb-1">
+                <NavLink class="btn btn-success" href="@($"online/group/{e.Id}")">
+                    @e.Name
+                </NavLink>
+            </div>
+        }
+    }
+</div>
 
+@code {
+    ExamTicketsContext _Context => Service;
 
+    public IEnumerable<Domain.Entities.Group>? Groups { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Groups = await _Context.Groups.OrderBy(g => g.Order).ToArrayAsync();
+    }
+}
 

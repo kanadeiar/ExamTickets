@@ -21,7 +21,7 @@ namespace ExamTickets.Dal.Migrations.ExamTickets
                     Patronymic = table.Column<string>(type: "TEXT", nullable: false),
                     Birthday = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ExamenName = table.Column<string>(type: "TEXT", nullable: false),
-                    TicketName = table.Column<string>(type: "TEXT", nullable: false),
+                    TicketText = table.Column<string>(type: "TEXT", nullable: false),
                     ValidCount = table.Column<int>(type: "INTEGER", nullable: false),
                     ErrorCount = table.Column<int>(type: "INTEGER", nullable: false),
                     Count = table.Column<int>(type: "INTEGER", nullable: false),
@@ -51,6 +51,29 @@ namespace ExamTickets.Dal.Migrations.ExamTickets
                 });
 
             migrationBuilder.CreateTable(
+                name: "ResultQuestions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    QuestionText = table.Column<string>(type: "TEXT", nullable: false),
+                    Selected = table.Column<int>(type: "INTEGER", nullable: false),
+                    Correct = table.Column<int>(type: "INTEGER", nullable: false),
+                    ExamenResultId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Timestamp = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ResultQuestions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ResultQuestions_ExamenResults_ExamenResultId",
+                        column: x => x.ExamenResultId,
+                        principalTable: "ExamenResults",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Examens",
                 columns: table => new
                 {
@@ -68,6 +91,28 @@ namespace ExamTickets.Dal.Migrations.ExamTickets
                         name: "FK_Examens_Groups_GroupId",
                         column: x => x.GroupId,
                         principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ResultQuestionOptions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    OptionText = table.Column<string>(type: "TEXT", nullable: false),
+                    IsCorrect = table.Column<bool>(type: "INTEGER", nullable: false),
+                    ResultQuestionId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Timestamp = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ResultQuestionOptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ResultQuestionOptions_ResultQuestions_ResultQuestionId",
+                        column: x => x.ResultQuestionId,
+                        principalTable: "ResultQuestions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -101,7 +146,6 @@ namespace ExamTickets.Dal.Migrations.ExamTickets
                         .Annotation("Sqlite:Autoincrement", true),
                     QuestionText = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     TicketId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Done = table.Column<bool>(type: "INTEGER", nullable: false),
                     Timestamp = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
@@ -124,7 +168,6 @@ namespace ExamTickets.Dal.Migrations.ExamTickets
                     OptionText = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     IsCorrect = table.Column<bool>(type: "INTEGER", nullable: false),
                     QuestionId = table.Column<int>(type: "INTEGER", nullable: false),
-                    IsUserChecked = table.Column<bool>(type: "INTEGER", nullable: false),
                     Timestamp = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
@@ -154,6 +197,16 @@ namespace ExamTickets.Dal.Migrations.ExamTickets
                 column: "TicketId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ResultQuestionOptions_ResultQuestionId",
+                table: "ResultQuestionOptions",
+                column: "ResultQuestionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ResultQuestions_ExamenResultId",
+                table: "ResultQuestions",
+                column: "ExamenResultId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tickets_ExamenId",
                 table: "Tickets",
                 column: "ExamenId");
@@ -162,16 +215,22 @@ namespace ExamTickets.Dal.Migrations.ExamTickets
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ExamenResults");
+                name: "QuestionOptions");
 
             migrationBuilder.DropTable(
-                name: "QuestionOptions");
+                name: "ResultQuestionOptions");
 
             migrationBuilder.DropTable(
                 name: "Questions");
 
             migrationBuilder.DropTable(
+                name: "ResultQuestions");
+
+            migrationBuilder.DropTable(
                 name: "Tickets");
+
+            migrationBuilder.DropTable(
+                name: "ExamenResults");
 
             migrationBuilder.DropTable(
                 name: "Examens");

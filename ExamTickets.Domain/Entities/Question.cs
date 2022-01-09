@@ -22,12 +22,5 @@ namespace ExamTickets.Domain.Entities
 
         [Display(Name = "Варианты ответов с отметками")]
         public ICollection<QuestionOption> QuestionOptions { get; set; } = new List<QuestionOption>();
-        
-        #region Действия пользователя
-
-        /// <summary> На этот вопрос пользователь ответил </summary>
-        public bool Done { get; set; }
-
-        #endregion
     }
 }
