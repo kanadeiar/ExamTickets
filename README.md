@@ -4,4 +4,4 @@
 
 Прототип экзаменационного приложения
 
-[Приложение в облаке](https://examtickets.azurewebsites.net/)
+[Приложение в облаке](https://kanadeiarexamtickets.azurewebsites.net)
