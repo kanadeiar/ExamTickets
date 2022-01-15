@@ -32,7 +32,7 @@
                 {
                     <tr>
                         <th>Дата и время:</th>
-                        <td>@ExamenResult.DateTime.Date.ToString("D") @ExamenResult.DateTime.ToString("t")</td>
+                        <td>@ExamenResult.DateTime.Date.ToString("dd.MM.yyyy") @ExamenResult.DateTime.ToString("HH:mm")</td>
                     </tr>
                     <tr>
                         <th>Фамилия:</th>
@@ -48,7 +48,7 @@
                     </tr>
                     <tr>
                         <th>Дата рождения:</th>
-                        <td>@ExamenResult.Birthday.ToString("dd MMMM yyyy")</td>
+                        <td>@ExamenResult.Birthday.ToString("dd MM yyyy")</td>
                     </tr>
                     <tr>
                         <th>Экзамен:</th>
