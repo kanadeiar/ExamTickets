@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamTickets.Dal", "ExamTick
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamTickets.Domain", "ExamTickets.Domain\ExamTickets.Domain.csproj", "{F07817F2-A585-451A-9ECC-499D851706D8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{27C84280-CDC2-4FE8-968C-27F9F1C59866}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamTickets.Tests", "Tests\ExamTickets.Tests\ExamTickets.Tests.csproj", "{8DDC9634-A861-41F3-8754-B82B7B27D72D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,9 +31,16 @@ Global
 		{F07817F2-A585-451A-9ECC-499D851706D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F07817F2-A585-451A-9ECC-499D851706D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F07817F2-A585-451A-9ECC-499D851706D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DDC9634-A861-41F3-8754-B82B7B27D72D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DDC9634-A861-41F3-8754-B82B7B27D72D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DDC9634-A861-41F3-8754-B82B7B27D72D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DDC9634-A861-41F3-8754-B82B7B27D72D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8DDC9634-A861-41F3-8754-B82B7B27D72D} = {27C84280-CDC2-4FE8-968C-27F9F1C59866}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {386F948A-E3FC-40F0-B858-AEDF964197F0}
