@@ -26,6 +26,36 @@
     {
       "library": "jquery-validation-unobtrusive@3.2.12",
       "destination": "wwwroot/lib/jquery-validation-unobtrusive/"
+    },
+    {
+      "library": "vue@3.2.26",
+      "destination": "wwwroot/lib/vue/",
+      "files": [
+        "vue.cjs.js",
+        "vue.cjs.min.js",
+        "vue.cjs.prod.js",
+        "vue.cjs.prod.min.js",
+        "vue.esm-browser.js",
+        "vue.esm-browser.min.js",
+        "vue.esm-browser.prod.js",
+        "vue.esm-browser.prod.min.js",
+        "vue.esm-bundler.js",
+        "vue.esm-bundler.min.js",
+        "vue.global.js",
+        "vue.global.min.js",
+        "vue.global.prod.js",
+        "vue.global.prod.min.js",
+        "vue.runtime.esm-browser.js",
+        "vue.runtime.esm-browser.min.js",
+        "vue.runtime.esm-browser.prod.js",
+        "vue.runtime.esm-browser.prod.min.js",
+        "vue.runtime.esm-bundler.js",
+        "vue.runtime.esm-bundler.min.js",
+        "vue.runtime.global.js",
+        "vue.runtime.global.min.js",
+        "vue.runtime.global.prod.js",
+        "vue.runtime.global.prod.min.js"
+      ]
     }
   ]
 }
