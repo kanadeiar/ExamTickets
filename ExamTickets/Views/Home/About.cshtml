@@ -2,25 +2,24 @@
     ViewBag.Title = "О приложении";
 }
 
-<div class="container">
-    <div class="row">
-        <div class="col-sm-3">
-            <partial name="Partial/_LeftSidebarPartial" />
-        </div>
-        <div class="col-sm-9">
-            <h1>@ViewBag.Title</h1>
-
+<div class="row">
+    <div class="col-sm-3">
+        <partial name="Partial/_LeftSidebarPartial" />
+    </div>
+    <div class="col-sm-9">
+        <h1>@ViewBag.Title</h1>
+        
+        <div class="border-1 shadow rounded bg-light p-1">
             <h1 class="p-4 bg-success text-white text-center rounded">Экзаменационные билеты</h1>
 
-            <p>Прототип приложения экзаменационных билетов.</p>
+            <p>Прототип веб приложения экзаменационных билетов.</p>
 
-            <a class="btn btn-outline-success" target="_blank" href="https://github.com/kanadeiar/ExamTickets">
+            <a class="btn btn-outline-dark" target="_blank" href="https://github.com/kanadeiar/ExamTickets" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Мой репозиторий с исходным кодом приложения">
                 <i class="fab fa-git"></i>
                 Мой github
             </a>
 
-            <component type="typeof(CounterPartial)" render-mode="ServerPrerendered" />
         </div>
     </div>
-
 </div>
+

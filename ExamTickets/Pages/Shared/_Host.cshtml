@@ -1,8 +1,18 @@
 ﻿@page "/online"
 @namespace ExamTickets.Pages
+@using Microsoft.AspNetCore.Authorization
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "_BlazorLayout";
 }
+@model HostModel
 
 <component type="typeof(App)" render-mode="ServerPrerendered" />
+
+@functions {
+    [Authorize]
+    public class HostModel : PageModel
+    {
+        
+    }
+}

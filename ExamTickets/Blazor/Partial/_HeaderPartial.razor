@@ -1,8 +1,8 @@
 ﻿@inherits LayoutComponentBase
 
 <header class="sticky-top">
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom mb-4">
-        <div class="container-fluid">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom mb-4">
+        <div class="container-lg">
             <a class="navbar-brand" href="/">
                 <img src="favicon.png" alt="Бренд" width="30" height="30" class="d-inline-block align-text-top">
                 Билеты
@@ -20,13 +20,25 @@
                         </NavLink>
                     </li>
                     <li class="nav-item">
-                        <NavLink class="nav-link" href="online">
+                        <NavLink class="nav-link" href="result">
                             Результаты
                         </NavLink>
                     </li>
                 </ul>
                 <div class="d-flex">
-                    <a class="btn btn-outline-success me-1" href="/">Назад</a>
+                    <AuthorizeView>
+                        <Tooltip Text="Раздел управления профилем пользователя системы">
+                            <a href="/account" class="btn btn-primary me-1">
+                                <i class="fa fa-user"></i> @context.User.Identity?.Name
+                            </a>
+                        </Tooltip>
+                    </AuthorizeView>
+                    
+                    <Tooltip Text="Завершить прохождение экзамена">
+                        <a class="btn btn-outline-success me-1" href="/">
+                            <i class="fa fa-arrow-left"></i> Завершить экзаменацию
+                        </a>
+                    </Tooltip>
                 </div>
             </div>
         </div>

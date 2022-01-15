@@ -1,0 +1,174 @@
+﻿@page "/online/group/{grid:int}/ticket/{id:int}"
+@using System.Timers
+@inherits OwningComponentBase<ExamTicketsContext>
+@inject NavigationManager NavManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IdentityContext Identity
+
+<PageTitle>Экзамен - Экзаменация</PageTitle>
+
+<h1 class="my-2 p-2 bg-dark text-white">Прохождение экзамена.</h1>
+
+<div class="border-1 shadow rounded bg-light p-2 mb-4">
+    <p>Экзамен: <strong>@ExamenName</strong></p>
+    <p class="my-0">Билет: <strong>@TicketText</strong></p>
+
+    <p class="my-0">Выделено времени на эказмен: <strong>@CountSpanToExam.Minutes.ToString() мин. @CountSpanToExam.Seconds.ToString() сек.</strong></p>
+    <p class="py-0">Прошло времени: <strong>@ExamBeginTime.Minutes.ToString() мин. @ExamBeginTime.Seconds.ToString() сек.</strong></p>
+
+    <p>Отвечайте на вопросы экзамена:</p>
+
+    @if (Questions is null)
+    {
+        <div class="p-4 text-center">Загрузка ...</div>
+    }
+    else if (!Questions.Any())
+    {
+        <div class="p-4 text-center">Данные отсутствуют</div>
+    }
+    else
+    {
+        <EditForm Model="Questions" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator/>
+            <ValidationSummary/>
+            @{ var index = 1; }
+            @foreach (var e in Questions)
+            {
+                <div class="mb-1 card bg-success bg-opacity-10">
+                    <div class="card-body">
+                        <h5 class="card-title">@(index++) @e.QuestionText</h5>
+                        <InputRadioGroup Name="@e.GetHashCode().ToString()" @bind-Value="e.Selected">
+                            @{ var optIndex = 1; }
+                            @foreach (var option in e.QuestionOptions)
+                            {
+                                <InputRadio Name="@e.GetHashCode().ToString()" Value="@( optIndex ++ )" ></InputRadio> <span>@( optIndex - 1 ) @option.OptionText</span> <br/>
+                            }
+                        </InputRadioGroup>
+                    </div>
+                </div>
+            }
+        
+            <div class="my-4">
+                <button type="submit" class="btn btn-success">Завершить экзамен</button>
+            </div>
+        </EditForm>
+    }
+</div>
+
+@code {
+    ExamTicketsContext _Context => Service;
+    [Parameter]
+    public int GrId { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+    public string ExamenName { get; set; }
+    public string TicketText { get; set; }
+    
+    public IEnumerable<ResultQuestion>? Questions { get; set; }
+
+    public TimeSpan CountSpanToExam { get; set; } = new (0, 10, 0);
+    public DateTime TimeStart { get; set; } = DateTime.Now;
+    public TimeSpan ExamBeginTime { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ExamenName = (await _Context.Tickets.Include(t => t.Examen).FirstAsync(g => g.Id == Id)).Examen.Name;
+        TicketText = (await _Context.Tickets.FirstAsync(g => g.Id == Id)).TicketText;
+
+        Questions = await _Context.Questions.Include(q => q.QuestionOptions).Where(q => q.TicketId == Id)
+            .Select(q => new ResultQuestion
+            {
+                QuestionText = q.QuestionText,
+                QuestionOptions = q.QuestionOptions.Select(o => new ResultQuestionOption
+                {
+                    Id = o.Id,
+                    OptionText = o.OptionText,
+                    IsCorrect = o.IsCorrect,
+                }),
+            }).ToArrayAsync();
+        foreach (var q in Questions)
+        {
+            var i = 1;
+            foreach (var qo in q.QuestionOptions)
+            {
+                if (qo.IsCorrect)
+                    q.Correct = i;
+                i++;
+            }
+        }
+        var timer = new Timer(1000);
+        timer.Elapsed += (s, a) => UpdateExamenBeginTime();
+        timer.Start();
+    }
+
+    public async Task HandleValidSubmit()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await Identity.Users.FirstAsync(u => u.UserName == authState.User.Identity.Name);
+        var res = new ExamenResult
+        {
+            DateTime = DateTime.Now,
+            SurName = user.SurName,
+            FirstName = user.FirstName,
+            Patronymic = user.Patronymic,
+            Birthday = user.Birthday,
+            ExamenName = ExamenName,
+            TicketText = TicketText,
+            ValidCount = Questions.Count(q => q.Correct == q.Selected),
+            ErrorCount = Questions.Count(q => q.Correct != q.Selected),
+            Count = Questions.Count(),
+            SpanRunningExam = DateTime.Now - TimeStart,
+            CountMinutesToExam = CountSpanToExam.Minutes,
+            MaxErrorsCount = 2,
+        };
+        _Context.ExamenResults.Add(res);
+        await _Context.SaveChangesAsync();
+        foreach (var q in Questions)
+        {
+            var rq = new ResultQuestion
+            {
+                QuestionText = q.QuestionText,
+                Selected = q.Selected,
+                Correct = q.Correct,
+                ExamenResult = res,
+            };
+            _Context.ResultQuestions.Add(rq);
+            foreach (var o in q.QuestionOptions)
+            {
+                var qo = new ResultQuestionOption
+                {
+                    OptionText = o.OptionText,
+                    IsCorrect = o.IsCorrect,
+                    ResultQuestion = rq,
+                };
+                _Context.ResultQuestionOptions.Add(qo);
+            }
+        }
+        await _Context.SaveChangesAsync();
+
+
+        NavManager.NavigateTo($"result/{res.Id}");
+    }
+
+    private void UpdateExamenBeginTime()
+    {
+        InvokeAsync(() =>
+        {
+            ExamBeginTime = DateTime.Now - TimeStart;
+            StateHasChanged();
+        });
+    }
+
+    //public class BlazorQuestion
+    //{
+    //    public string QuestionText { get; set; }
+    //    public IEnumerable<BlazorQuestionOptions> QuestionOptions { get; set; } = new List<BlazorQuestionOptions>();
+    //    public int Selected { get; set; }
+    //    public int Correct { get; set; }
+    //}
+    //public class BlazorQuestionOptions
+    //{
+    //    public int Id { get; set; }
+    //    public string OptionText { get; set; }
+    //}
+}

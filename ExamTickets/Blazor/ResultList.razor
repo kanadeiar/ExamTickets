@@ -1,0 +1,63 @@
+﻿@page "/result"
+@inherits OwningComponentBase<ExamTicketsContext>
+
+<PageTitle>Результаты экзаменов - Экзаменация</PageTitle>
+
+<h1 class="my-2 p-2 bg-dark text-white">Результаты экзаменов.</h1>
+
+<div class="table-responsive border-1 shadow rounded bg-light p-2 mb-4">
+    <table class="table table-sm table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Дата время</th>
+                <th>ФИО</th>
+                <th>Экзамен</th>
+                <th>Билет</th>
+                <th>Статус</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ExamenResults is null)
+            {
+                <tr><th colspan="9" class="p-4 text-center">Загрузка ...</th></tr>
+            }
+            else if (!ExamenResults.Any())
+            {
+                <tr><th colspan="9" class="p-4 text-center">Данные отсутствуют</th></tr>
+            }
+            else
+            {
+                foreach (var er in ExamenResults.OrderByDescending(er => er.DateTime))
+                {
+                    <tr>
+                        <td>@er.Id</td>
+                        <td>@er.DateTime.ToString("D") @er.DateTime.ToString("t")</td>
+                        <td>@er.SurName @(er.FirstName[0]). @(er.Patronymic[0]).</td>
+                        <td>@er.ExamenName</td>
+                        <td>@er.TicketText</td>
+                        <td class="@( (er.IsGood) ? "text-success" : "text-danger")"><strong>@er.GetStatusExamStr</strong></td>
+                        <td class="text-center">
+                            <NavLink class="btn btn-sm btn-info mb-1" href="@($"result/{er.Id}")">
+                                Инфо
+                            </NavLink>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    ExamTicketsContext _Context => Service;
+
+    public IEnumerable<ExamenResult>? ExamenResults { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ExamenResults = await _Context.ExamenResults.ToArrayAsync();
+    }
+
+}
