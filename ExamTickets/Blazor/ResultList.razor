@@ -14,7 +14,7 @@
                 <th>ФИО</th>
                 <th>Экзамен</th>
                 <th>Билет</th>
-                <th>Стстус</th>
+                <th>Статус</th>
                 <th></th>
             </tr>
         </thead>
@@ -37,7 +37,7 @@
                         <td>@er.SurName @(er.FirstName[0]). @(er.Patronymic[0]).</td>
                         <td>@er.ExamenName</td>
                         <td>@er.TicketText</td>
-                        <td>@er.GetStatusExamStr</td>
+                        <td class="@( (er.IsGood) ? "text-success" : "text-danger")"><strong>@er.GetStatusExamStr</strong></td>
                         <td class="text-center">
                             <NavLink class="btn btn-sm btn-info mb-1" href="@($"result/{er.Id}")">
                                 Инфо

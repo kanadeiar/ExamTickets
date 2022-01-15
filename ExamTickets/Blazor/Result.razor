@@ -5,117 +5,126 @@
 
 <h1 class="my-2 p-2 bg-dark text-white">Результат экзаменов.</h1>
 
-<div class="table-responsive border-1 shadow rounded bg-light p-2 mb-4">
-    
-    <div>
-        <NavLink class="btn btn-info mb-1" href="result">
-            Все результаты
-        </NavLink>
+<div class="border-1 shadow rounded bg-light p-2 mb-4">
+    <div class="table-responsive">
+
+        <div>
+            <NavLink class="btn btn-info mb-1" href="result">
+                Все результаты
+            </NavLink>
+        </div>
+
+        <table class="table my-2 table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Параметр</th>
+                    <th>Значение</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ExamenResult is null)
+                {
+                    <tr>
+                        <div class="p-4 text-center">Загрузка ...</div>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <th>Дата и время:</th>
+                        <td>@ExamenResult.DateTime.Date.ToString("D") @ExamenResult.DateTime.ToString("t")</td>
+                    </tr>
+                    <tr>
+                        <th>Фамилия:</th>
+                        <td>@ExamenResult.SurName</td>
+                    </tr>
+                    <tr>
+                        <th>имя:</th>
+                        <td>@ExamenResult.FirstName</td>
+                    </tr>
+                    <tr>
+                        <th>Отчетство:</th>
+                        <td>@ExamenResult.Patronymic</td>
+                    </tr>
+                    <tr>
+                        <th>Дата рождения:</th>
+                        <td>@ExamenResult.Birthday.ToString("dd MMMM yyyy")</td>
+                    </tr>
+                    <tr>
+                        <th>Экзамен:</th>
+                        <td>@ExamenResult.ExamenName</td>
+                    </tr>
+                    <tr>
+                        <th>Билет:</th>
+                        <td>@ExamenResult.TicketText</td>
+                    </tr>
+                    <tr>
+                        <th>Результат экзаменации:</th>
+                        <td class="@( (ExamenResult.IsGood) ? "text-success" : "text-danger")"><strong>@ExamenResult.GetStatusExamStr</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Количество ответов:</th>
+                        <td>@ExamenResult.Count</td>
+                    </tr>
+                    <tr>
+                        <th>Правильных ответов:</th>
+                        <td>@ExamenResult.ValidCount</td>
+                    </tr>
+                    <tr>
+                        <th>Неверных ответов:</th>
+                        <td>@ExamenResult.ErrorCount</td>
+                    </tr>
+                    <tr>
+                        <th>Максимально допустимое количество неправильных ответов:</th>
+                        <td>@ExamenResult.MaxErrorsCount шт.</td>
+                    </tr>
+                    <tr>
+                        <th>Затрачено времени:</th>
+                        <td>@ExamenResult.SpanRunningExam.Hours ч. @ExamenResult.SpanRunningExam.Minutes м. @ExamenResult.SpanRunningExam.Seconds сек.</td>
+                    </tr>
+                    <tr>
+                        <th>Предел времени на экзамен:</th>
+                        <td>@ExamenResult.CountMinutesToExam м.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 
-    <table class="table my-2 table-bordered table-striped">
-        <thead>
-        <tr>
-            <th>Параметр</th>
-            <th>Значение</th>
-        </tr>
-        </thead>
-        <tbody>
-        @if (ExamenResult is null)
+    <div>
+        @if (ExamenResult is not null)
         {
-            <tr>
-                <div class="p-4 text-center">Загрузка ...</div>
-            </tr>
-        }
-        else
-        {
-            <tr>
-                <th>Дата и время:</th>
-                <td>@ExamenResult.DateTime.Date.ToString("D") @ExamenResult.DateTime.ToString("t")</td>
-            </tr>
-            <tr>
-                <th>Фамилия:</th>
-                <td>@ExamenResult.SurName</td>
-            </tr>
-            <tr>
-                <th>имя:</th>
-                <td>@ExamenResult.FirstName</td>
-            </tr>
-            <tr>
-                <th>Отчетство:</th>
-                <td>@ExamenResult.Patronymic</td>
-            </tr>
-            <tr>
-                <th>Дата рождения:</th>
-                <td>@ExamenResult.Birthday.ToString("dd MMMM yyyy")</td>
-            </tr>
-            <tr>
-                <th>Экзамен:</th>
-                <td>@ExamenResult.ExamenName</td>
-            </tr>
-            <tr>
-                <th>Билет:</th>
-                <td>@ExamenResult.TicketText</td>
-            </tr>
-            <tr>
-                <th>Статус:</th>
-                <td>@ExamenResult.GetStatusExamStr</td>
-            </tr>
-            <tr>
-                <th>Количество ответов:</th>
-                <td>@ExamenResult.Count</td>
-            </tr>
-            <tr>
-                <th>Правильных ответов:</th>
-                <td>@ExamenResult.ValidCount</td>
-            </tr>
-            <tr>
-                <th>Неверных ответов:</th>
-                <td>@ExamenResult.ErrorCount</td>
-            </tr>
-            <tr>
-                <th>Затрачено времени:</th>
-                <td>@ExamenResult.SpanRunningExam.Hours ч. @ExamenResult.SpanRunningExam.Minutes м.</td>
-            </tr>
-            <tr>
-                <th>Предел времени на экзамен:</th>
-                <td>@ExamenResult.CountMinutesToExam м.</td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <h6>Ответы на билет:</h6>
-                    @foreach (var rq in ExamenResult.ResultQuestions)
+            <h3>Ответы на билет:</h3>
+            var index = 1;
+            @foreach (var rq in ExamenResult.ResultQuestions)
+            {
+                var i = 1;
+                <div class="mt-4"><h5>@(index++) @rq.QuestionText</h5></div>
+                var optIndex = 1;
+                @foreach (var qo in rq.QuestionOptions)
+                {
+                    @if (i == rq.Correct && i == rq.Selected)
                     {
-                        var i = 1;
-                        <div><strong>@rq.QuestionText</strong></div>
-                        @foreach (var qo in rq.QuestionOptions)
-                        {
-                            @if (i == rq.Correct && i == rq.Selected)
-                            {
-                                <div class="text-success"><strong>@qo.OptionText - Правильный ответ на вопрос</strong></div> 
-                            }
-                            else if (i == rq.Correct && i != rq.Selected)
-                            {
-                                <div class="text-primary"><strong>@qo.OptionText - Должен был быть выбран</strong></div> 
-                            }
-                            else if (i != rq.Correct && i == rq.Selected)
-                            {
-                                <div class="text-danger"><strong>@qo.OptionText - Ошибочно выбран</strong></div> 
-                            }
-                            else
-                            {
-                                <div>@qo.OptionText</div> 
-                            }
-                            i++;
-                        }
+                        <div class="text-success"><strong>@( optIndex ++ ) @qo.OptionText - Правильный ответ на вопрос</strong></div>
                     }
-                </td>
-            </tr>
+                    else if (i == rq.Correct && i != rq.Selected)
+                    {
+                        <div class="text-primary"><strong>@( optIndex ++ ) @qo.OptionText - Должен был быть выбран</strong></div>
+                    }
+                    else if (i != rq.Correct && i == rq.Selected)
+                    {
+                        <div class="text-danger"><strong>@( optIndex ++ ) @qo.OptionText - Ошибочно выбран</strong></div>
+                    }
+                    else
+                    {
+                        <div>@( optIndex ++ ) @qo.OptionText</div>
+                    }
+                    i++;
+                }
+            }
         }
-        </tbody>
-    </table>
+    </div>
 </div>
-
 
 
 @code {

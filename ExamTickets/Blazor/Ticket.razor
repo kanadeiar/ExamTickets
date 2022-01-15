@@ -1,4 +1,5 @@
 ﻿@page "/online/group/{grid:int}/ticket/{id:int}"
+@using System.Timers
 @inherits OwningComponentBase<ExamTicketsContext>
 @inject NavigationManager NavManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -10,7 +11,10 @@
 
 <div class="border-1 shadow rounded bg-light p-2 mb-4">
     <p>Экзамен: <strong>@ExamenName</strong></p>
-    <p>Билет: <strong>@TicketText</strong></p>
+    <p class="my-0">Билет: <strong>@TicketText</strong></p>
+
+    <p class="my-0">Выделено времени на эказмен: <strong>@CountSpanToExam.Minutes.ToString() мин. @CountSpanToExam.Seconds.ToString() сек.</strong></p>
+    <p class="py-0">Прошло времени: <strong>@ExamBeginTime.Minutes.ToString() мин. @ExamBeginTime.Seconds.ToString() сек.</strong></p>
 
     <p>Отвечайте на вопросы экзамена:</p>
 
@@ -34,9 +38,10 @@
                     <div class="card-body">
                         <h5 class="card-title">@(index++) @e.QuestionText</h5>
                         <InputRadioGroup Name="@e.GetHashCode().ToString()" @bind-Value="e.Selected">
+                            @{ var optIndex = 1; }
                             @foreach (var option in e.QuestionOptions)
                             {
-                                <InputRadio Name="@e.GetHashCode().ToString()" Value="@option.Id" /> <span>@option.OptionText</span> <br/>
+                                <InputRadio Name="@e.GetHashCode().ToString()" Value="@( optIndex ++ )" ></InputRadio> <span>@( optIndex - 1 ) @option.OptionText</span> <br/>
                             }
                         </InputRadioGroup>
                     </div>
@@ -58,8 +63,12 @@
     public int Id { get; set; }
     public string ExamenName { get; set; }
     public string TicketText { get; set; }
-
+    
     public IEnumerable<ResultQuestion>? Questions { get; set; }
+
+    public TimeSpan CountSpanToExam { get; set; } = new (0, 10, 0);
+    public DateTime TimeStart { get; set; } = DateTime.Now;
+    public TimeSpan ExamBeginTime { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -87,13 +96,16 @@
                 i++;
             }
         }
+        var timer = new Timer(1000);
+        timer.Elapsed += (s, a) => UpdateExamenBeginTime();
+        timer.Start();
     }
 
     public async Task HandleValidSubmit()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = await Identity.Users.FirstAsync(u => u.UserName == authState.User.Identity.Name);
-        var result = new ExamenResult
+        var res = new ExamenResult
         {
             DateTime = DateTime.Now,
             SurName = user.SurName,
@@ -105,16 +117,47 @@
             ValidCount = Questions.Count(q => q.Correct == q.Selected),
             ErrorCount = Questions.Count(q => q.Correct != q.Selected),
             Count = Questions.Count(),
-            //ResultQuestions = Questions,
-            SpanRunningExam = new TimeSpan(0, 8, 0),
-            CountMinutesToExam = 10,
+            SpanRunningExam = DateTime.Now - TimeStart,
+            CountMinutesToExam = CountSpanToExam.Minutes,
             MaxErrorsCount = 2,
         };
-        _Context.ExamenResults.Add(result);
+        _Context.ExamenResults.Add(res);
         await _Context.SaveChangesAsync();
-        NavManager.NavigateTo($"result/{result.Id}");
+        foreach (var q in Questions)
+        {
+            var rq = new ResultQuestion
+            {
+                QuestionText = q.QuestionText,
+                Selected = q.Selected,
+                Correct = q.Correct,
+                ExamenResult = res,
+            };
+            _Context.ResultQuestions.Add(rq);
+            foreach (var o in q.QuestionOptions)
+            {
+                var qo = new ResultQuestionOption
+                {
+                    OptionText = o.OptionText,
+                    IsCorrect = o.IsCorrect,
+                    ResultQuestion = rq,
+                };
+                _Context.ResultQuestionOptions.Add(qo);
+            }
+        }
+        await _Context.SaveChangesAsync();
+
+
+        NavManager.NavigateTo($"result/{res.Id}");
     }
 
+    private void UpdateExamenBeginTime()
+    {
+        InvokeAsync(() =>
+        {
+            ExamBeginTime = DateTime.Now - TimeStart;
+            StateHasChanged();
+        });
+    }
 
     //public class BlazorQuestion
     //{

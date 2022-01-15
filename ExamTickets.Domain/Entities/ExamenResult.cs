@@ -57,6 +57,11 @@ namespace ExamTickets.Domain.Entities
                 return TypeStatusExam.Uncompleted;
             }
         }
+
+        /// <summary> Результат экзамена - успешно сдан </summary>
+        [NotMapped] 
+        public bool IsGood => ValidCount >= Count - MaxErrorsCount;
+
         [NotMapped, Display(Name = "Статус результата экзамена")]
         public string GetStatusExamStr => GetStatusExam switch
         {
