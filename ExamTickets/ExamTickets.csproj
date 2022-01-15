@@ -20,5 +20,9 @@
     <ProjectReference Include="..\ExamTickets.Dal\ExamTickets.Dal.csproj" />
     <ProjectReference Include="..\ExamTickets.Domain\ExamTickets.Domain.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
   
 </Project>

@@ -1,0 +1,174 @@
+﻿@{
+    ViewBag.Title = "Тестирование мебельного калькулятора";
+}
+
+<div class="row">
+    <div class="col-sm-3">
+        <partial name="Partial/_LeftSidebarPartial" />
+    </div>
+    <div class="col-sm-9">
+        <h1>@ViewBag.Title</h1>
+
+        <div id="vue-app" class="border-1 shadow rounded bg-light p-1">
+            <h4>Тестирование мебельного калькулятора на vue.js</h4>
+
+            <div v-if="step <= 1">
+                <h6>Выберите тип:</h6>
+                <a v-on:click="selectType(1)" class="btn btn-outline-dark">
+                    <img src="images/one.png" height="200" /><br />
+                    Квадратный тип
+                </a>
+                <a v-on:click="selectType(2)" class="btn btn-outline-dark">
+                    <img src="images/two.png" height="200" /><br />
+                    Диагональный тип
+                </a>
+                <a v-on:click="selectType(3)" class="btn btn-outline-dark">
+                    <img src="images/three.png" height="200" /><br />
+                    Круглый тип
+                </a>
+            </div>
+
+            <div v-if="step == 2">
+                <div v-if="type <= 1">
+                    <h6>Выберите стиль для мебели квадратного типа:</h6>
+                    <a v-on:click="selectStyle(1)" class="btn btn-warning">
+                        <img src="images/style1.png" width="200" /><br />
+                        Стремный стиль
+                    </a>
+                    <a v-on:click="selectStyle(5)" class="btn btn-success">
+                        <img src="images/style5.png" width="200" /><br />
+                        Шикарный стиль
+                    </a>
+                </div>
+                <div v-if="type == 2">
+                    <h6>Выберите стиль для мебели диагонального типа:</h6>
+                    <a v-on:click="selectStyle(1)" class="btn btn-warning">
+                        <img src="images/style1.png" width="200" /><br />
+                        Стремный стиль
+                    </a>
+                    <a v-on:click="selectStyle(2)" class="btn btn-primary">
+                        <img src="images/style3.png" width="200" /><br />
+                        Ежовый стиль
+                    </a>
+                    <a v-on:click="selectStyle(3)" class="btn btn-info">
+                        <img src="images/style3.png" width="200" /><br />
+                        Кабинетный стиль
+                    </a>
+                    <a v-on:click="selectStyle(5)" class="btn btn-success">
+                        <img src="images/style1.png" width="200" /><br />
+                        Шикарный стиль
+                    </a>
+                </div>
+                <div v-if="type == 3">
+                    <h6>Выберите стиль для мебели круглого типа:</h6>
+                    <a v-on:click="selectStyle(2)" class="btn btn-primary">
+                        <img src="images/style3.png" width="200" /><br />
+                        Ежовый стиль
+                    </a>
+                    <a v-on:click="selectStyle(3)" class="btn btn-info">
+                        <img src="images/style3.png" width="200" /><br />
+                        Кабинетный стиль
+                    </a>
+                    <a v-on:click="selectStyle(4)" class="btn btn-danger">
+                        <img src="images/style3.png" width="200" /><br />
+                        Круглый стиль
+                    </a>
+                </div>
+                <div class="mt-2">
+                    <a v-on:click="stepsBack" class="btn btn-outline-info text-black">Назад к выбору типа мебели</a>
+                </div>
+            </div>
+
+            <div v-if="step == 3">
+                <h6>Введите параметры мебели:</h6>
+
+                <div v-if="type != 3">
+                    <label>Ширина мебели: <strong>{{ width }}</strong> см</label>
+                    <div>
+                        <input v-model="width" class="form-range" type="range" min="10" max="200"></input>
+                    </div>
+                </div>
+                <div v-if="type != 3">
+                    <label>Длинна мебели: <strong>{{ length }}</strong> см</label>
+                    <div>
+                        <input v-model="length" class="form-range" type="range" min="20" max="400"></input>
+                    </div>
+                </div>
+                <div v-if="type == 2">
+                    <label>Диагональ мебели: <strong>{{ diam }}</strong> см</label>
+                    <div>
+                        <input v-model="diam" class="form-range" type="range" min="30" max="500"></input>
+                    </div>
+                </div>
+                <div v-if="type == 3">
+                    <label>Радиус круглой мебели: <strong>{{ radius }}</strong> см</label>
+                    <div>
+                        <input v-model="radius" class="form-range" type="range" min="1" max="100"></input>
+                    </div>
+                </div>
+                <div>
+                    <a v-on:click="goToResult" class="btn btn-primary">Рассчитать стоимость</a>
+                </div>
+                <div class="mt-2">
+                    <a v-on:click="stepsBack" class="btn btn-outline-info text-black">Назад к выбору стиля мебели</a>
+                </div>
+            </div>
+
+            <div v-if="step == 4">
+                <h6>Рассчитанная стоимость такой мебели:</h6>
+
+                <p>{{ cost }} рублей.</p>
+
+                <a href="#" class="btn btn-success disabled">Заказать</a>
+                <div class="mt-2">
+                    <a v-on:click="stepsBack" class="btn btn-outline-info text-black">Назад к вводу параметров мебели</a>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+@section Scripts
+{
+<!-- development version vuejs, includes helpful console warnings -->
+<script src="~/lib/vue/vue.global.js"></script>
+
+<script>
+
+    let AjaxTestVueApp = {
+        data() {
+            return {
+                step: 1,
+                type: 0,
+                style: 0,
+                width: 50,
+                length: 100,
+                diam: 120,
+                radius: 5,
+                cost: 0
+            }
+        },
+        methods: {
+            stepsBack() {
+                this.step -= 1;
+            },
+            selectType: function( type ) {
+                this.step = 2;
+                this.type = type;
+            },
+            selectStyle: function( style ) {
+                this.step = 3;
+                this.style = style;
+            },
+            goToResult() {
+                this.step = 4;
+                this.cost = this.width + this.length + this.diam + this.radius;
+            }
+        }
+    };
+    let vm = Vue.createApp(AjaxTestVueApp).mount('#vue-app');
+</script>
+}
