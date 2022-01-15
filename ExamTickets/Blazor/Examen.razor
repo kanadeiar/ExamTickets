@@ -22,7 +22,7 @@
     {
         @foreach (var e in Tickets)
         {
-            <NavLink class="btn btn-success me-1" href="@($"online/group/{GrId}/ticket/{e.Id}")">
+            <NavLink class="btn btn-success me-1 mb-1" href="@($"online/group/{GrId}/ticket/{e.Id}")">
                 @e.TicketText
             </NavLink>
         }
